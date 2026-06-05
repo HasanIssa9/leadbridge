@@ -37,7 +37,7 @@ jobs:
         working-directory: flutter_app
         run: |
           flutter build apk --release \
-            --dart-define=API_URL=${{ secrets.API_URL || 'https://api.leadbridge.iq/api' }}
+            --dart-define=API_URL=${{ secrets.API_URL || 'https://leadbridge-api.onrender.com/api' }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -67,7 +67,7 @@ jobs:
         working-directory: flutter_app
         run: |
           flutter build web --release \
-            --dart-define=API_URL=${{ secrets.API_URL || 'https://api.leadbridge.iq/api' }}
+            --dart-define=API_URL=${{ secrets.API_URL || 'https://leadbridge-api.onrender.com/api' }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

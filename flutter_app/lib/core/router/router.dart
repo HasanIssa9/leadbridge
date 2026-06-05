@@ -7,6 +7,7 @@ import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/leads/presentation/leads_screen.dart';
 import '../../features/delivery/presentation/delivery_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/subscriptions/presentation/subscriptions_screen.dart';
 import '../shell/app_shell.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -29,7 +30,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen()),
           GoRoute(path: '/leads',     builder: (_, __) => const LeadsScreen()),
           GoRoute(path: '/delivery',  builder: (_, __) => const DeliveryScreen()),
-          GoRoute(path: '/settings',  builder: (_, __) => const SettingsScreen()),
+          GoRoute(path: '/settings',       builder: (_, __) => const SettingsScreen()),
+          GoRoute(path: '/subscriptions',  builder: (_, __) => const SubscriptionsScreen()),
         ],
       ),
     ],

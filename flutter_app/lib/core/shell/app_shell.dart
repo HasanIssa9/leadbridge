@@ -6,9 +6,10 @@ class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.child});
 
   static const _items = [
-    (icon: Icons.dashboard_outlined,       label: 'الرئيسية',  path: '/dashboard'),
-    (icon: Icons.people_outline,           label: 'العملاء',   path: '/leads'),
-    (icon: Icons.local_shipping_outlined,  label: 'التوصيل',  path: '/delivery'),
+    (icon: Icons.dashboard_outlined,       label: 'الرئيسية',   path: '/dashboard'),
+    (icon: Icons.people_outline,           label: 'العملاء',    path: '/leads'),
+    (icon: Icons.local_shipping_outlined,  label: 'التوصيل',   path: '/delivery'),
+    (icon: Icons.credit_card_outlined,     label: 'اشتراكات',  path: '/subscriptions'),
     (icon: Icons.settings_outlined,        label: 'الإعدادات', path: '/settings'),
   ];
 
