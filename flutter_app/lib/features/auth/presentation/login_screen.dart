@@ -26,8 +26,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(authStateProvider, (_, s) {
-      if (s.hasError) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.error.toString()), backgroundColor: Colors.red));
+      if (s.hasError) {
+        final err = s.error.toString();
+        final msg = err.contains('Connection') || err.contains('Network') || err.contains('SocketException')
+          ? '⚠️ الخادم غير متاح حالياً. تأكد من رفع الـ Backend أولاً.'
+          : err.contains('بيانات') || err.contains('credentials') || err.contains('Invalid')
+            ? '❌ بيانات الدخول غير صحيحة'
+            : 'خطأ: $err';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg), backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5)));
+      }
     });
     final loading = ref.watch(authStateProvider).isLoading;
 
@@ -44,7 +53,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
               Text('إدارة العملاء والتوصيل', textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey[600])),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
+
+              // Backend status notice
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange.shade200),
+                ),
+                child: Row(children: [
+                  const Icon(Icons.info_outline, size: 16, color: Colors.orange),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(
+                    'لتفعيل الحساب، يجب رفع الـ Backend أولاً على Render.com أو Railway',
+                    style: TextStyle(fontSize: 11, color: Colors.orange.shade800),
+                  )),
+                ]),
+              ),
+              const SizedBox(height: 16),
+
               TextFormField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
