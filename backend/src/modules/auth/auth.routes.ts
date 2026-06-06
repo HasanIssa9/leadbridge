@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { authService } from './auth.service';
 import { authenticate, AuthRequest } from '../../middleware/auth';
+import { query } from '../../config/database';
 
 const router = Router();
 
@@ -30,8 +31,15 @@ router.post('/logout', authenticate, async (req: AuthRequest, res: Response) => 
   res.json({ success: true });
 });
 
-router.get('/me', authenticate, (req: AuthRequest, res: Response) => {
-  res.json({ success: true, data: req.user });
+router.get('/me', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const r = await query(
+      `SELECT u.id, u.org_id, u.email, u.full_name, u.role, o.name as org_name
+       FROM users u JOIN organizations o ON o.id = u.org_id WHERE u.id = $1`,
+      [req.user!.id]
+    );
+    res.json({ success: true, data: r.rows[0] });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
 });
 
 export default router;
