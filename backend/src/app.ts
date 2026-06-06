@@ -51,15 +51,18 @@ app.use((err: any, req: any, res: any, next: any) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 3000;
+export default app;
 
-const start = async () => {
-  await connectRedis();
-  app.listen(PORT, () => {
-    console.log(`🚀 LeadBridge API running on port ${PORT}`);
-    console.log(`📍 Health: http://localhost:${PORT}/health`);
-    console.log(`🌍 ENV: ${process.env.NODE_ENV || 'development'}`);
-  });
-};
-
-start();
+// Start server only when NOT on Vercel (local dev or Render)
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  const start = async () => {
+    await connectRedis();
+    app.listen(PORT, () => {
+      console.log(`🚀 LeadBridge API running on port ${PORT}`);
+      console.log(`📍 Health: http://localhost:${PORT}/health`);
+      console.log(`🌍 ENV: ${process.env.NODE_ENV || 'development'}`);
+    });
+  };
+  start();
+}

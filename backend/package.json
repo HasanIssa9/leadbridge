@@ -2,12 +2,16 @@
   "name": "leadbridge-backend",
   "version": "1.0.0",
   "description": "LeadBridge Iraq SaaS Backend",
+  "main": "dist/app.js",
+  "engines": { "node": ">=18" },
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "start:prod": "npm run build && npm run db:migrate && node dist/app.js",
-    "db:migrate": "tsx src/scripts/migrate.ts"
+    "start:prod": "npm run build && node dist/app.js",
+    "db:migrate": "tsx src/scripts/migrate.ts",
+    "serve": "npm run build && firebase emulators:start --only functions,hosting",
+    "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
     "express": "^4.19.2",
@@ -25,6 +29,7 @@
     "axios": "^1.7.2",
     "stripe": "^15.7.0",
     "firebase-admin": "^12.2.0",
+    "firebase-functions": "^4.9.0",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },

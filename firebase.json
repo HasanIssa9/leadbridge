@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": "flutter_app/build/web",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|wasm)",
+        "headers": [{ "key": "Cache-Control", "value": "max-age=31536000" }]
+      }
+    ]
+  },
+  "functions": {
+    "source": "backend",
+    "runtime": "nodejs20",
+    "ignore": ["node_modules", ".git", "dist"]
+  }
+}

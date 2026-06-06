@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 const _storage = FlutterSecureStorage();
 const _baseUrl = String.fromEnvironment(
   'API_URL',
-  defaultValue: 'https://leadbridge-api.onrender.com/api',
+  defaultValue: 'https://backend-theta-fawn-62.vercel.app/api',
 );
 
 class ApiClient {

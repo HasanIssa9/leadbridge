@@ -37,7 +37,7 @@ jobs:
         working-directory: flutter_app
         run: |
           flutter build apk --release \
-            --dart-define=API_URL=${{ secrets.API_URL || 'https://leadbridge-api.onrender.com/api' }}
+            --dart-define=API_URL=${{ secrets.API_URL || 'https://us-central1-leadbridge-iraq.cloudfunctions.net/api' }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -46,9 +46,9 @@ jobs:
           path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
-  # ── Build & Deploy Web ─────────────────────────────────
+  # ── Deploy Flutter Web to Firebase Hosting ─────────────
   web:
-    name: Deploy Flutter Web
+    name: Deploy to Firebase Hosting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -67,16 +67,41 @@ jobs:
         working-directory: flutter_app
         run: |
           flutter build web --release \
-            --dart-define=API_URL=${{ secrets.API_URL || 'https://leadbridge-api.onrender.com/api' }}
+            --dart-define=API_URL=${{ secrets.API_URL || 'https://us-central1-leadbridge-iraq.cloudfunctions.net/api' }}
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          path: flutter_app/build/web
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: leadbridge-iraq
+          channelId: live
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+  # ── Deploy Backend to Firebase Functions ───────────────
+  functions:
+    name: Deploy Firebase Functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci --ignore-scripts
+
+      - name: Build TypeScript
+        working-directory: backend
+        run: npm run build
+
+      - name: Deploy Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions,hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: leadbridge-iraq
